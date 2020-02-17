@@ -1,5 +1,5 @@
 struct universe {
-/*Put some appropriate things here*/
+    char v [5][5];
 };
 
 /*Do not modify the next seven lines*/
