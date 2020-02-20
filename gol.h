@@ -1,5 +1,8 @@
 struct universe {
-/*Put some appropriate things here*/
+    char array [5][5];
+    int row;
+    int column;
+
 };
 
 /*Do not modify the next seven lines*/
