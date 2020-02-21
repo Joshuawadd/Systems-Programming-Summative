@@ -10,6 +10,7 @@ int main(int argc, char *argv[]){
   int print_statistics = 0;
   int torus_topology = 0;
   v.array[5][5];
+  int i;
 
   while (*++argv)
   {
@@ -61,6 +62,17 @@ int main(int argc, char *argv[]){
   printf("%d" "\n", torus_topology);
 
   read_in_file(infile,&v);
+
+  for (i = 0; i < 20; i++)
+    {
+      printf("%c", v.array[6][i]);
+    }
+    // if (i == 18)
+    // {
+    printf("\n");
+    // }
+
+
   /*evolve(&v,will_be_alive);
   evolve(&v,will_be_alive);
   evolve(&v,will_be_alive);

@@ -1,37 +1,45 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include"gol.h"
+#include "gol.h"
 
 void read_in_file(FILE *infile, struct universe *u)
 {
   //struct universe u;
-  char line[30];
+  char *line = NULL;
   char *words[30];
   int nrows = 0;
-  int n;
+  char n;
   int i;
+  int j;
+  size_t len = 0;
+  size_t read;
+
   if (infile == NULL)
   {
-    fprintf(stderr, "can't open %s\n", infile);
+    fprintf(stderr, "can't open file\n");
     exit(EXIT_FAILURE);
   }
 
-  while (fgetline(infile, line, 30) != EOF)
+  while ((read = getline(&line, &len, infile)) != -1)
   {
+    //printf("%s \n", line);
 
-    n = getwords(line, words, 30);
-
-    for (i = 0; i < n; i++)
-      u[0].array[nrows][i] = atoi(words[i]);
+    for (i = 0; i < 20; i++)
+      u[0].array[nrows][i] = line[i];
     nrows++;
-
-    
+    //printf("%d \n", nrows);
   }
+    for (i = 0; i < 20; i++)
+    {
+      printf("%c", u[0].array[6][i]);
+    }
+    // if (i == 18)
+    // {
+    printf("\n");
+    // }
 
-  for (i = 0; i < n; i++)
-  {
-    printf("%c", u[0].array[0][i]);
-  }
-  return 0;
+  fclose(infile);
+  if (line)
+    free(line);
 }
