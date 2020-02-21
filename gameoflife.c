@@ -11,6 +11,9 @@ int main(int argc, char *argv[]){
   int torus_topology = 0;
   v.array[5][5];
   int i;
+  int j;
+  FILE *infile ;
+  FILE *outfile;
 
   while (*++argv)
   {
@@ -53,7 +56,7 @@ int main(int argc, char *argv[]){
     }
   }
 
-  FILE *infile ;
+  
   infile = fopen(input_filename, "r");
   printf("%s \n", input_filename);
   printf("%s" "\n", output_filename);
@@ -63,21 +66,30 @@ int main(int argc, char *argv[]){
 
   read_in_file(infile,&v);
 
-  for (i = 0; i < 20; i++)
+  for (j = 0; j < 20; j++)
+  {
+    for (i = 0; i < 20; i++)
     {
-      printf("%c", v.array[6][i]);
+      printf("%c", v.array[j][i]);
+      if (i == 19)
+      printf("\n");
+    }  
+  }
+
+  outfile = fopen("output.txt", "w");
+
+   if(outfile == NULL)
+    {
+        /* File not created hence exit */
+        printf("Unable to create file.\n");
+        exit(EXIT_FAILURE);
     }
-    // if (i == 18)
-    // {
-    printf("\n");
-    // }
 
-
-  /*evolve(&v,will_be_alive);
-  evolve(&v,will_be_alive);
-  evolve(&v,will_be_alive);
-  evolve(&v,will_be_alive);
-  evolve(&v,will_be_alive);
-  write_out_file(stdout,&v); */
+  // evolve(&v,will_be_alive);
+  // evolve(&v,will_be_alive);
+  // evolve(&v,will_be_alive);
+  // evolve(&v,will_be_alive);
+  // evolve(&v,will_be_alive);
+  write_out_file(outfile,&v);
 return 0;
 }

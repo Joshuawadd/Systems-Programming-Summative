@@ -1,8 +1,8 @@
 #include <stdio.h>
 struct universe {
-    char array [20][20];
-    int row;
-    int column;
+    char **array;
+    int rows;
+    int columns;
 
 };
 
