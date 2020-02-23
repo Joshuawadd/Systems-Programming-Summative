@@ -4,6 +4,11 @@ struct universe
     char *array;
     int rows;
     int columns;
+    float *alive;
+    float current_average;
+    float average;
+    int generations;
+    int evolutions;
 };
 
 /*Do not modify the next seven lines*/

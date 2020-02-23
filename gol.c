@@ -14,6 +14,7 @@ void read_in_file(FILE *infile, struct universe *u)
   int column = 0;
   int columns_found = 0;
   int items;
+  int column_check = 0;
 
   if (infile == NULL)
   {
@@ -21,24 +22,58 @@ void read_in_file(FILE *infile, struct universe *u)
     exit(EXIT_FAILURE);
   }
 
+  //printf("lol");
+
   n = fgetc(infile);
+
+  //printf("%c", n);
 
   while (n != EOF)
   {
+    //printf("%c \n", n);
 
     if (n == '\n')
     {
-      columns_found = 1;
-      row++;
+      if (columns_found == 1)
+      {
+        if (column == column_check)
+        {
+          row++;
+          column_check = 0;
+        }
+        else
+        {
+          fprintf(stderr, "Invalid file: Every row does not have the same number of columns.\n");
+          exit(EXIT_FAILURE);
+        }
+      }
+      else
+      {
+        columns_found = 1;
+        row++;
+      }
     }
-    if (columns_found == 0)
+    else if (columns_found == 0)
     {
-
       column++;
+    }
+    else
+    {
+      column_check++;
     }
 
     n = fgetc(infile);
+
+    if (column > 512)
+    {
+      fprintf(stderr, "Invalid file: Too many columns\n");
+      exit(EXIT_FAILURE);
+    }
   }
+
+  printf("%d \n", row);
+  printf("%d \n", column);
+
 
   rewind(infile);
   u->rows = row;
@@ -57,14 +92,27 @@ void read_in_file(FILE *infile, struct universe *u)
 
   while (n != EOF)
   {
+    if (n == '\n')
+      {
+        printf("yay \n");
+      }
 
     if (n != '\n')
     {
-
+      if (n == '\n')
+      {
+        printf("yay");
+      }
+      printf("%c %d \n", n, a);
       u->array[a] = n;
       a++;
     }
     n = fgetc(infile);
+    printf("%d %d \n", n, a);
+    if (n == '\n')
+      {
+        printf("yay \n");
+      }
   }
 
   fclose(infile);
@@ -169,6 +217,54 @@ void evolve(struct universe *u, int (*rule)(struct universe *u, int column, int 
       }
     }
   }
-
+  //free(u->array);
   u->array = array;
+
+}
+
+void print_statistics(struct universe *u)
+{
+  int i;
+  int j;
+  float dead = 0;
+  float alive = 0;
+  float average;
+  float overall_average = 0;
+
+  for (i = 0; i < u->rows; i++)
+  {
+    for (j = 0; j < u->columns; j++)
+    {
+      if (u->array[(i * u->columns) + j] == '*')
+      {
+        alive++;
+      }
+      else
+      {
+        //printf("%c \n", u->array[(i * u->columns) + j]);
+        dead++;
+      }
+    }
+  }
+  printf("%f \n", alive);
+  printf("%f \n", dead);
+
+  average = alive / (alive + dead);
+  u->alive[u->evolutions] = average;
+  if (u->evolutions == u->generations)
+  {
+    for (i = 0; i < u->generations; i++)
+    {
+      overall_average = overall_average + u->alive[i];
+    }
+    u->average = overall_average / u->generations;
+    u->current_average = average;
+  }
+  else
+  {
+    u->evolutions++;
+    printf("%d \n", u->evolutions);
+  }
+
+  printf("%.3f\n", average);
 }
