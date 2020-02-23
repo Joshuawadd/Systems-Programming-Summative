@@ -2,6 +2,23 @@
 #include <string.h>
 #include <stdlib.h>
 #include "gol.h"
+
+/* void print_array(struct universe *v)
+{
+  int i;
+  int j;
+
+  for (i = 0; i < v->rows; i++)
+  {
+    for (j = 0; j < v->columns; j++)
+    {
+      printf("%c", v->array[(i * v->columns) + j]);
+      if (j == (v->columns - 1))
+        printf("\n");
+    }
+  }
+} */
+
 int main(int argc, char *argv[])
 {
   struct universe v;
@@ -76,11 +93,10 @@ int main(int argc, char *argv[])
   {
     for (j = 0; j < v.columns; j++)
     {
-      printf("%c", v.array[(i*v.columns)+j]);
+      printf("%c", v.array[(i * v.columns) + j]);
       if (j == (v.columns - 1))
         printf("\n");
     }
-    
   }
 
   outfile = fopen(output_filename, "w");
@@ -92,11 +108,11 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  // evolve(&v,will_be_alive);
-  // evolve(&v,will_be_alive);
-  // evolve(&v,will_be_alive);
-  // evolve(&v,will_be_alive);
-  // evolve(&v,will_be_alive);
+  evolve(&v, will_be_alive);
+  evolve(&v, will_be_alive);
+  evolve(&v, will_be_alive);
+  evolve(&v, will_be_alive);
+  evolve(&v, will_be_alive);
   write_out_file(outfile, &v);
 
   free(v.array);
