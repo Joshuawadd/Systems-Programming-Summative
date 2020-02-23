@@ -1,6 +1,6 @@
 #include <stdio.h>
 struct universe {
-    int *array;
+    char *array;
     int rows;
     int columns;
 

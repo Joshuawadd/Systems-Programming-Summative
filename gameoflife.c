@@ -72,14 +72,18 @@ int main(int argc, char *argv[])
 
   read_in_file(infile, &v);
 
-  // for (i = 0; i < v.columns; i++)
-  // {
-  //   printf("%c", v.array[i]);
-  //   if (i == (v.columns-1))
-  //     printf("\n");
-  // }
+  for (i = 0; i < v.rows; i++)
+  {
+    for (j = 0; j < v.columns; j++)
+    {
+      printf("%c", v.array[(i*v.columns)+j]);
+      if (j == (v.columns - 1))
+        printf("\n");
+    }
+    
+  }
 
-  outfile = fopen("output.txt", "w");
+  outfile = fopen(output_filename, "w");
 
   if (outfile == NULL)
   {
@@ -94,5 +98,7 @@ int main(int argc, char *argv[])
   // evolve(&v,will_be_alive);
   // evolve(&v,will_be_alive);
   write_out_file(outfile, &v);
+
+  free(v.array);
   return 0;
 }

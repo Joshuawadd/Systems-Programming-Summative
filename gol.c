@@ -5,15 +5,9 @@
 
 void read_in_file(FILE *infile, struct universe *u)
 {
-  //struct universe u;
-  char *line = NULL;
-  char *words[30];
-  int nrows = 0;
   char n;
   int i;
   int j;
-  size_t len = 0;
-  size_t read;
   int a = 0;
   int b = 0;
   int row = 0;
@@ -29,38 +23,29 @@ void read_in_file(FILE *infile, struct universe *u)
 
   n = fgetc(infile);
 
-  
   while (n != EOF)
   {
-    //printf("%c \n", n);
-
-    //printf("%d \n", columns_found);
 
     if (n == '\n')
     {
-      printf("%d \n", column);
       columns_found = 1;
       row++;
     }
     if (columns_found == 0)
     {
-      //printf("lol");
+
       column++;
     }
-    //printf("%c \n", n);
-    //printf("%d \n", n);
+
     n = fgetc(infile);
   }
-
-  printf("%d \n", column);
-  printf("%d \n", row);
 
   rewind(infile);
   u[0].rows = row;
   u[0].columns = column;
   items = row * column;
 
-  u[0].array = malloc(sizeof(int) * items);
+  u[0].array = malloc(sizeof(char) * items);
 
   if (u[0].array == NULL)
   {
@@ -69,85 +54,68 @@ void read_in_file(FILE *infile, struct universe *u)
   }
 
   n = fgetc(infile);
-  //printf("ok");
-  //printf("%c \n", n);
 
   while (n != EOF)
   {
+
     if (n != '\n')
     {
-      for (i = 0; i < row; i++)
-      {
-        //printf("%d \n", column);
-        for (j = 0; j < column; j++)
-        {
-          *(u[0].array + i * column + j) = n;
 
-          //printf("%c \n", n);
-
-          //printf("%d \n", *(u[0].array + i * column + j));
-        }
-      }
+      u[0].array[a] = n;
+      a++;
     }
     n = fgetc(infile);
   }
 
-  for (i = 0; i < u[0].columns; i++)
-  {
-    printf("%c", u[0].array[i]);
-    if (i == (u[0].columns - 1))
-      printf("\n");
-  }
-
   fclose(infile);
-
-  // while ((read = getline(&line, &len, infile)) != -1)
-  // {
-  //   //printf("%zu\n", read);
-  //   u[0].rows++;
-  //   printf("%s\n", line);
-  // }
-
-  //   for (i = 0; i < read; i++)
-  //     u[0].columns++;
-
-  // if (line)
-  //   free(line);
-
-  // printf("%d %d  \n", u[0].columns, u[0].rows);
-
-  // u[0].array = malloc(sizeof(char) * u[0].columns);
-  // for (i = 0; i < u[0].columns; i++)
-  // {
-  //   u[0].array[i] = malloc(sizeof(char)*u[0].rows);
-  // }
-
-  // while ((read = getline(&line, &len, infile)) != -1)
-  // {
-  //   printf("%s\n", line);
-
-  //   for (i = 0; i < read; i++)
-  //     u[0].array[nrows][i] = line[i];
-  //   nrows++;
-  //   //printf("%d \n", nrows);
-  //   a++;
-  // }
-
-  free(u[0].array);
-  // fclose(infile);
-  // if (line)
-  //   free(line);
 }
 
 void write_out_file(FILE *outfile, struct universe *u)
 {
   int i;
+  int j;
 
-  for (i = 0; i < 20; i++)
+  for (i = 0; i < u[0].rows; i++)
   {
-    //fwrite(u[0].array[i], sizeof(char), sizeof(u[0].array[i]), outfile);
-    fwrite("\n", sizeof(char), 1, outfile);
+    for (j = 0; j < u[0].columns; j++)
+    {
+      fprintf(outfile, "%c", u[0].array[(i * u[0].columns) + j]);
+      if (j == (u[0].columns - 1))
+        fprintf(outfile, "\n");
+    }
   }
-  //fwrite (u[0].array , sizeof(char), sizeof(u[0].array), outfile);
-  //fclose (outfile);
+}
+
+int is_alive(struct universe *u, int column, int row)
+{
+  if (u[0].array[(row * u[0].columns) + column] == '*')
+  {
+    return 1;
+  }
+  else if (u[0].array[(row * u[0].columns) + column] == '.')
+  {
+    return 0;
+  }
+}
+int will_be_alive(struct universe *u, int column, int row)
+{
+  int i;
+  int j;
+  int neighbours_alive = 0;
+
+  for (i= -1; i<2; i++)
+  {
+    for (j= -1; j<2; j++)
+    {
+      if 
+    }
+  }
+}
+// int will_be_alive_torus(struct universe *u,  int column, int row)
+// {
+
+// }
+void evolve(struct universe *u, int (*rule)(struct universe *u, int column, int row))
+{
+
 }
