@@ -22,44 +22,41 @@ void read_in_file(FILE *infile, struct universe *u)
     exit(EXIT_FAILURE);
   }
 
-  //printf("lol");
-
   n = fgetc(infile);
-
-  //printf("%c", n);
 
   while (n != EOF)
   {
-    //printf("%c \n", n);
-
-    if (n == '\n')
+    if (n != 13)
     {
-      if (columns_found == 1)
+      if (n == '\n')
       {
-        if (column == column_check)
+        if (columns_found == 1)
         {
-          row++;
-          column_check = 0;
+          if (column == column_check)
+          {
+            row++;
+            column_check = 0;
+          }
+          else
+          {
+            fprintf(stderr, "Invalid file: Every row does not have the same number of columns.\n");
+            exit(EXIT_FAILURE);
+          }
         }
         else
         {
-          fprintf(stderr, "Invalid file: Every row does not have the same number of columns.\n");
-          exit(EXIT_FAILURE);
+          columns_found = 1;
+          row++;
         }
+      }
+      else if (columns_found == 0)
+      {
+        column++;
       }
       else
       {
-        columns_found = 1;
-        row++;
+        column_check++;
       }
-    }
-    else if (columns_found == 0)
-    {
-      column++;
-    }
-    else
-    {
-      column_check++;
     }
 
     n = fgetc(infile);
@@ -70,10 +67,6 @@ void read_in_file(FILE *infile, struct universe *u)
       exit(EXIT_FAILURE);
     }
   }
-
-  printf("%d \n", row);
-  printf("%d \n", column);
-
 
   rewind(infile);
   u->rows = row;
@@ -92,27 +85,12 @@ void read_in_file(FILE *infile, struct universe *u)
 
   while (n != EOF)
   {
-    if (n == '\n')
-      {
-        printf("yay \n");
-      }
-
-    if (n != '\n')
+    if (n != '\n' && n != 13)
     {
-      if (n == '\n')
-      {
-        printf("yay");
-      }
-      printf("%c %d \n", n, a);
       u->array[a] = n;
       a++;
     }
     n = fgetc(infile);
-    printf("%d %d \n", n, a);
-    if (n == '\n')
-      {
-        printf("yay \n");
-      }
   }
 
   fclose(infile);
@@ -191,10 +169,78 @@ int will_be_alive(struct universe *u, int column, int row)
     }
   }
 }
-// int will_be_alive_torus(struct universe *u,  int column, int row)
-// {
+int will_be_alive_torus(struct universe *u, int column, int row)
+{
+  int i;
+  int j;
+  int neighbours_alive = 0;
+  int torus_column = column;
+  int torus_row = row;
 
-// }
+  for (i = -1; i < 2; i++)
+  {
+    for (j = -1; j < 2; j++)
+    {
+      torus_column = column;
+      torus_row = row;
+      if (!(j == 0 && i == 0))
+      {
+        if (column + j < 0)
+        {
+          torus_column = column + (u->columns - 1);
+        }
+        if (row + i < 0)
+        {
+          torus_row = row + (u->rows - 1);
+        }
+        if (column + j > u->columns - 1)
+        {
+          torus_column = column - (u->columns - 1);
+        }
+        if (row + i > u->rows - 1)
+        {
+          torus_row = row - (u->rows - 1);
+        }
+        if (torus_column == column)
+        {
+          torus_column = torus_column + j;
+        }
+        if (torus_row == row)
+        {
+          torus_row = torus_row + i;
+        }
+        if (is_alive(u, torus_column, torus_row) == 1)
+        {
+          neighbours_alive++;
+        }
+      }
+    }
+  }
+
+  if (is_alive(u, column, row) == 1)
+  {
+    if (neighbours_alive == 2 || neighbours_alive == 3)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  else
+  {
+    if (neighbours_alive == 3)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  }
+}
+
 void evolve(struct universe *u, int (*rule)(struct universe *u, int column, int row))
 {
   int i;
@@ -217,9 +263,7 @@ void evolve(struct universe *u, int (*rule)(struct universe *u, int column, int 
       }
     }
   }
-  //free(u->array);
   u->array = array;
-
 }
 
 void print_statistics(struct universe *u)
@@ -241,30 +285,21 @@ void print_statistics(struct universe *u)
       }
       else
       {
-        //printf("%c \n", u->array[(i * u->columns) + j]);
         dead++;
       }
     }
   }
-  printf("%f \n", alive);
-  printf("%f \n", dead);
 
   average = alive / (alive + dead);
-  u->alive[u->evolutions] = average;
+  u->alive = u->alive + alive;
+  u->dead = u->dead + dead;
   if (u->evolutions == u->generations)
   {
-    for (i = 0; i < u->generations; i++)
-    {
-      overall_average = overall_average + u->alive[i];
-    }
-    u->average = overall_average / u->generations;
+    u->average = u->alive / (u->alive + u->dead);
     u->current_average = average;
   }
   else
   {
     u->evolutions++;
-    printf("%d \n", u->evolutions);
   }
-
-  printf("%.3f\n", average);
 }

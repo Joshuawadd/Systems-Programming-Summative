@@ -4,7 +4,8 @@ struct universe
     char *array;
     int rows;
     int columns;
-    float *alive;
+    float alive;
+    float dead;
     float current_average;
     float average;
     int generations;
