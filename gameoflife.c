@@ -56,6 +56,10 @@ int main(int argc, char *argv[])
       case 't':
         torus_topology = 1;
         break;
+
+      default:
+        fprintf(stdout, "Error: Unkown command supplied.\n");
+        exit(EXIT_FAILURE);
       }
     }
   }
