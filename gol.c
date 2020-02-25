@@ -18,14 +18,28 @@ void read_in_file(FILE *infile, struct universe *u)
 
   if (infile == NULL)
   {
-    fprintf(stderr, "can't open file\n");
+    fprintf(stderr, "Error: Cannot open file.\n");
     exit(EXIT_FAILURE);
   }
 
   n = fgetc(infile);
 
+  if (n == EOF)
+  {
+    fprintf(stderr, "Error: Blank file.\n");
+    exit(EXIT_FAILURE);
+  }
+
+
   while (n != EOF)
   {
+    
+    if (!(n == '.' || n == '*' || n == 13 || n == '\n'))
+    {
+      fprintf(stderr, "Error: Characters other than '*' or '.' detected.\n");
+      exit(EXIT_FAILURE);
+    }
+
     if (n != 13)
     {
       if (n == '\n')
@@ -77,8 +91,8 @@ void read_in_file(FILE *infile, struct universe *u)
 
   if (u->array == NULL)
   {
-    printf("Error! memory not allocated.");
-    exit(0);
+    fprintf(stderr, "Error! memory not allocated.");
+    exit(EXIT_FAILURE);
   }
 
   n = fgetc(infile);
@@ -135,7 +149,7 @@ int will_be_alive(struct universe *u, int column, int row)
     {
       if (!(j == 0 && i == 0))
       {
-        if (!(column + j < 0 || row + i < 0 || column + j > u->columns - 1 || row + j > u->rows - 1))
+        if (!(column + j < 0 || row + i < 0 || column + j > u->columns - 1 || row + i > u->rows - 1))
         {
           if (is_alive(u, column + j, row + i) == 1)
           {

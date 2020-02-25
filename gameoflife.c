@@ -12,11 +12,11 @@ int main(int argc, char *argv[])
   int statistics = 0;
   int torus_topology = 0;
   int i;
-  int j;
   int infile_supplied = 0;
   int outfile_supplied = 0;
   FILE *infile;
   FILE *outfile;
+  (void)argc;
 
   while (*++argv)
   {
@@ -62,12 +62,12 @@ int main(int argc, char *argv[])
 
   if (infile_supplied == 0)
   {
-    0;
-    //infile = fopen(stdin, "r");
+    read_in_file(stdin, &v);
   }
   else
   {
     infile = fopen(input_filename, "r");
+    read_in_file(infile, &v);
   }
 
   if (outfile_supplied == 0)
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     outfile = fopen(output_filename, "w");
   }
 
-  read_in_file(infile, &v);
+  //read_in_file(infile, &v);
 
   if (outfile == NULL)
   {
