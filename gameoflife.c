@@ -35,14 +35,14 @@ int main(int argc, char *argv[])
             {
               if (input_filename[a] != argv[1][a])
               {
-                fprintf(stderr, "Cannot supply more than one input file.\n");
+                fprintf(stderr, "Error: Cannot supply more than one input file.\n");
                 exit(EXIT_FAILURE);
               }
             }
           }
           else
           {
-            fprintf(stderr, "Cannot supply more than one input file.\n");
+            fprintf(stderr, "Error: Cannot supply more than one input file.\n");
             exit(EXIT_FAILURE);
           }
         }
@@ -59,14 +59,14 @@ int main(int argc, char *argv[])
             {
               if (output_filename[a] != argv[1][a])
               {
-                fprintf(stderr, "Cannot supply more than one output file.\n");
+                fprintf(stderr, "Error: Cannot supply more than one output file.\n");
                 exit(EXIT_FAILURE);
               }
             }
           }
           else
           {
-            fprintf(stderr, "Cannot supply more than one output file.\n");
+            fprintf(stderr, "Error: Cannot supply more than one output file.\n");
             exit(EXIT_FAILURE);
           }
         }
@@ -79,11 +79,16 @@ int main(int argc, char *argv[])
         {
           if (number_of_generations != atoi(argv[1]))
           {
-            fprintf(stderr, "Cannot supply more than value for number of generations.\n");
+            fprintf(stderr, "Error: Cannot supply more than value for number of generations.\n");
             exit(EXIT_FAILURE);
           }
         }
         number_of_generations = atoi(argv[1]);
+        if (number_of_generations < 0)
+        {
+          fprintf(stderr, "Error: The number of generations cannot be less than zero.\n");
+            exit(EXIT_FAILURE);
+        }
         generations_supplied = 1;
         break;
 
@@ -96,7 +101,7 @@ int main(int argc, char *argv[])
         break;
 
       default:
-        fprintf(stdout, "Error: Unkown command supplied.\n");
+        fprintf(stderr, "Error: Unkown command supplied.\n");
         exit(EXIT_FAILURE);
       }
     }
@@ -123,7 +128,7 @@ int main(int argc, char *argv[])
 
   if (outfile == NULL)
   {
-    printf("Unable to create file.\n");
+    fprintf(stderr, "Error: Unable to create file.\n");
     exit(EXIT_FAILURE);
   }
 
@@ -160,8 +165,8 @@ int main(int argc, char *argv[])
   printf("\n");
   if (statistics == 1)
   {
-    fprintf(stdout, "%.3f %% of cells currently alive\n", v.current_average);
-    fprintf(stdout, "%.3f %% of cells alive on average\n", v.average);
+    fprintf(stdout, "%.3f %% of cells currently alive\n", v.current_average*100);
+    fprintf(stdout, "%.3f %% of cells alive on average\n", v.average*100);
   }
 
   free(v.array);

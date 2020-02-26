@@ -26,7 +26,7 @@ void read_in_file(FILE *infile, struct universe *u)
 
   if (n == EOF)
   {
-    fprintf(stderr, "Error: Blank file.\n");
+    fprintf(stderr, "Error: Blank input.\n");
     exit(EXIT_FAILURE);
   }
 
@@ -35,7 +35,7 @@ void read_in_file(FILE *infile, struct universe *u)
   u->array = malloc(sizeof(char) * items);
   if (u->array == NULL)
   {
-    fprintf(stderr, "Error! memory not allocated.");
+    fprintf(stderr, "Error: memory not allocated.");
     exit(EXIT_FAILURE);
   }
 
@@ -44,7 +44,7 @@ void read_in_file(FILE *infile, struct universe *u)
 
     if (!(n == '.' || n == '*' || n == '\n'))
     {
-      fprintf(stderr, "Error: Characters other than '*' or '.' detected.\n");
+      fprintf(stderr, "Error: Invalid input. Characters other than '*' or '.' detected.\n");
       exit(EXIT_FAILURE);
     }
     if (n == '\n')
@@ -59,7 +59,7 @@ void read_in_file(FILE *infile, struct universe *u)
         }
         else
         {
-          fprintf(stderr, "Invalid file: Every row does not have the same number of columns.\n");
+          fprintf(stderr, "Error: Invalid input. Every row does not have the same number of columns.\n");
           exit(EXIT_FAILURE);
         }
       }
@@ -89,7 +89,7 @@ void read_in_file(FILE *infile, struct universe *u)
 
     if (column > 512)
     {
-      fprintf(stderr, "Invalid file: Too many columns\n");
+      fprintf(stderr, "Error: Invalid input. Too many columns\n");
       exit(EXIT_FAILURE);
     }
   }
