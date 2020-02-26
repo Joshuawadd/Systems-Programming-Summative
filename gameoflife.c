@@ -12,8 +12,10 @@ int main(int argc, char *argv[])
   int statistics = 0;
   int torus_topology = 0;
   int i;
+  size_t a;
   int infile_supplied = 0;
   int outfile_supplied = 0;
+  int generations_supplied = 0;
   FILE *infile;
   FILE *outfile;
   (void)argc;
@@ -27,8 +29,23 @@ int main(int argc, char *argv[])
       case 'i':
         if (infile_supplied == 1)
         {
-          fprintf(stderr, "Cannot supply more than one input file.\n");
-          exit(EXIT_FAILURE);
+          if (strlen(input_filename) == strlen(argv[1]))
+            {
+              for (a = 0; a < strlen(input_filename); a++)
+              {
+                if (input_filename[a] != argv[1][a])
+                {
+                  fprintf(stderr, "Cannot supply more than one input file.\n");
+                  exit(EXIT_FAILURE);
+                }
+              }
+            }
+            else
+            {
+              fprintf(stderr, "Cannot supply more than one input file.\n");
+                  exit(EXIT_FAILURE);
+            }
+            
         }
         input_filename = argv[1];
         infile_supplied = 1;
@@ -38,15 +55,38 @@ int main(int argc, char *argv[])
       case 'o':
         if (outfile_supplied == 1)
         {
-          fprintf(stderr, "Cannot supply more than one output file.\n");
-          exit(EXIT_FAILURE);
+          if (strlen(output_filename) == strlen(argv[1]))
+            {
+              for (a = 0; a < strlen(output_filename); a++)
+              {
+                if (output_filename[a] != argv[1][a])
+                {
+                  fprintf(stderr, "Cannot supply more than one output file.\n");
+                  exit(EXIT_FAILURE);
+                }
+              }
+            }
+            else
+            {
+              fprintf(stderr, "Cannot supply more than one output file.\n");
+                  exit(EXIT_FAILURE);
+            }
         }
         output_filename = argv[1];
         outfile_supplied = 1;
         break;
 
       case 'g':
+        if (generations_supplied == 1)
+        {
+          if (number_of_generations != atoi(argv[1]))
+          {
+            fprintf(stderr, "Cannot supply more than value for number of generations.\n");
+            exit(EXIT_FAILURE);
+          }
+        }
         number_of_generations = atoi(argv[1]);
+        generations_supplied = 1;
         break;
 
       case 's':
@@ -66,6 +106,7 @@ int main(int argc, char *argv[])
 
   if (infile_supplied == 0)
   {
+    //printf("yes");
     read_in_file(stdin, &v);
   }
   else

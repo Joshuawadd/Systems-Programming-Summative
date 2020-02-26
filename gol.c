@@ -13,7 +13,7 @@ void read_in_file(FILE *infile, struct universe *u)
   int row = 0;
   int column = 0;
   int columns_found = 0;
-  int items;
+  int items = 0;
   int column_check = 0;
 
   if (infile == NULL)
@@ -30,40 +30,52 @@ void read_in_file(FILE *infile, struct universe *u)
     exit(EXIT_FAILURE);
   }
 
+  items++;
+
+  u->array = malloc(sizeof(char) * items);
+  if (u->array == NULL)
+  {
+    fprintf(stderr, "Error! memory not allocated.");
+    exit(EXIT_FAILURE);
+  }
 
   while (n != EOF)
   {
-    
-    if (!(n == '.' || n == '*' || n == 13 || n == '\n'))
+
+    if (!(n == '.' || n == '*' || n == '\n'))
     {
       fprintf(stderr, "Error: Characters other than '*' or '.' detected.\n");
       exit(EXIT_FAILURE);
     }
-
-    if (n != 13)
+    if (n == '\n')
     {
-      if (n == '\n')
+
+      if (columns_found == 1)
       {
-        if (columns_found == 1)
+        if (column == column_check)
         {
-          if (column == column_check)
-          {
-            row++;
-            column_check = 0;
-          }
-          else
-          {
-            fprintf(stderr, "Invalid file: Every row does not have the same number of columns.\n");
-            exit(EXIT_FAILURE);
-          }
+          row++;
+          column_check = 0;
         }
         else
         {
-          columns_found = 1;
-          row++;
+          fprintf(stderr, "Invalid file: Every row does not have the same number of columns.\n");
+          exit(EXIT_FAILURE);
         }
       }
-      else if (columns_found == 0)
+      else
+      {
+        columns_found = 1;
+        row++;
+      }
+    }
+    else
+    {
+      u->array = realloc(u->array, sizeof(char) * items);
+      u->array[a] = n;
+      a++;
+      items++;
+      if (columns_found == 0)
       {
         column++;
       }
@@ -82,30 +94,32 @@ void read_in_file(FILE *infile, struct universe *u)
     }
   }
 
-  rewind(infile);
+
+  //printf("\n");
   u->rows = row;
   u->columns = column;
-  items = row * column;
 
-  u->array = malloc(sizeof(char) * items);
+  // u->array = malloc(sizeof(char) * items);
 
-  if (u->array == NULL)
-  {
-    fprintf(stderr, "Error! memory not allocated.");
-    exit(EXIT_FAILURE);
-  }
+  // if (u->array == NULL)
+  // {
+  //   fprintf(stderr, "Error! memory not allocated.");
+  //   exit(EXIT_FAILURE);
+  // }
 
-  n = fgetc(infile);
+  // n = fgetc(infile);
 
-  while (n != EOF)
-  {
-    if (n != '\n' && n != 13)
-    {
-      u->array[a] = n;
-      a++;
-    }
-    n = fgetc(infile);
-  }
+  // while (n != EOF)
+  // {
+  //   if (n != '\n')
+  //   {
+  //     u->array[a] = n;
+  //     //printf("%c",n);
+  //     a++;
+  //   }
+  //   //printf("\n");
+  //   n = fgetc(infile);
+  // }
 
   fclose(infile);
 }
