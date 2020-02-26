@@ -30,47 +30,45 @@ int main(int argc, char *argv[])
         if (infile_supplied == 1)
         {
           if (strlen(input_filename) == strlen(argv[1]))
+          {
+            for (a = 0; a < strlen(input_filename); a++)
             {
-              for (a = 0; a < strlen(input_filename); a++)
+              if (input_filename[a] != argv[1][a])
               {
-                if (input_filename[a] != argv[1][a])
-                {
-                  fprintf(stderr, "Cannot supply more than one input file.\n");
-                  exit(EXIT_FAILURE);
-                }
+                fprintf(stderr, "Cannot supply more than one input file.\n");
+                exit(EXIT_FAILURE);
               }
             }
-            else
-            {
-              fprintf(stderr, "Cannot supply more than one input file.\n");
-                  exit(EXIT_FAILURE);
-            }
-            
+          }
+          else
+          {
+            fprintf(stderr, "Cannot supply more than one input file.\n");
+            exit(EXIT_FAILURE);
+          }
         }
         input_filename = argv[1];
         infile_supplied = 1;
-
         break;
 
       case 'o':
         if (outfile_supplied == 1)
         {
           if (strlen(output_filename) == strlen(argv[1]))
+          {
+            for (a = 0; a < strlen(output_filename); a++)
             {
-              for (a = 0; a < strlen(output_filename); a++)
+              if (output_filename[a] != argv[1][a])
               {
-                if (output_filename[a] != argv[1][a])
-                {
-                  fprintf(stderr, "Cannot supply more than one output file.\n");
-                  exit(EXIT_FAILURE);
-                }
+                fprintf(stderr, "Cannot supply more than one output file.\n");
+                exit(EXIT_FAILURE);
               }
             }
-            else
-            {
-              fprintf(stderr, "Cannot supply more than one output file.\n");
-                  exit(EXIT_FAILURE);
-            }
+          }
+          else
+          {
+            fprintf(stderr, "Cannot supply more than one output file.\n");
+            exit(EXIT_FAILURE);
+          }
         }
         output_filename = argv[1];
         outfile_supplied = 1;
@@ -106,7 +104,6 @@ int main(int argc, char *argv[])
 
   if (infile_supplied == 0)
   {
-    //printf("yes");
     read_in_file(stdin, &v);
   }
   else
@@ -124,11 +121,8 @@ int main(int argc, char *argv[])
     outfile = fopen(output_filename, "w");
   }
 
-  //read_in_file(infile, &v);
-
   if (outfile == NULL)
   {
-    /* File not created hence exit */
     printf("Unable to create file.\n");
     exit(EXIT_FAILURE);
   }

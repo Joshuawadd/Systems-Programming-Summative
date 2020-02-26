@@ -93,33 +93,8 @@ void read_in_file(FILE *infile, struct universe *u)
       exit(EXIT_FAILURE);
     }
   }
-
-
-  //printf("\n");
   u->rows = row;
   u->columns = column;
-
-  // u->array = malloc(sizeof(char) * items);
-
-  // if (u->array == NULL)
-  // {
-  //   fprintf(stderr, "Error! memory not allocated.");
-  //   exit(EXIT_FAILURE);
-  // }
-
-  // n = fgetc(infile);
-
-  // while (n != EOF)
-  // {
-  //   if (n != '\n')
-  //   {
-  //     u->array[a] = n;
-  //     //printf("%c",n);
-  //     a++;
-  //   }
-  //   //printf("\n");
-  //   n = fgetc(infile);
-  // }
 
   fclose(infile);
 }
